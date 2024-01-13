@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { nav } from "../../data";
+import Auth from "./Auth/Auth";
 
 const DemoHeader = () => {
   const [isActive, setIsActive] = useState(false);
@@ -34,6 +35,7 @@ const DemoHeader = () => {
             <button className="hidden text-sm sm:flex items-center gap-5">
               Sign In
             </button>
+            <Auth/>
           </div>
           <button className={`text-white rounded-full px-3 p-2 text-sm font-medium ${isActive ? "bg-green-700" : "bg-black"} transition-all duration-500`}>
             Get Started
