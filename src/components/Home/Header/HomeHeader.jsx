@@ -11,8 +11,7 @@ import UserModal from './UserModal';
 
 const HomeHeader = () => {
   const [modal, setModal] = useState(false);
-
-  const hidden = modal ? "visible opacity-100" : "invisible opacity-0";
+  const [searchModal, setSearchModal] = useState(false);
 
   return (
     <header className='border-b border-gray-200'>
@@ -24,12 +23,17 @@ const HomeHeader = () => {
               <BsMedium />
             </span>
           </Link>
-          <Search />
+          <Search modal={searchModal} setModal={setSearchModal}/>
         </div>
 
         {/* right side */}
 
         <div className='flex items-center gap-3 sm:gap-7'>
+          <span 
+            onClick={() => setSearchModal(true)}
+            className='flex sm:hidden text-3xl to-gray-300 cursor-pointer'>
+            <CiSearch />
+          </span>
           <Link to="/write" className='hidden md:flex items-center gap-1 text-gray-500'>
             <span className='text-3xl'>
               <LiaEditSolid />
@@ -46,11 +50,11 @@ const HomeHeader = () => {
             onClick={() => setModal(true)}
             className='w-[2.3rem] h-[2.3rem] object-cover rounded-full cursor-pointer' 
             src="/profile.jpg" alt="profile-img" />
-            <span className='cursor-pointer text-gray-500'>
+            <span onClick={() => setModal(true)} className='cursor-pointer text-gray-500'>
               <MdKeyboardArrowDown />
             </span>
-            <Modal modal={modal} setModal={setModal} hidden={hidden}>
-              <div className={`${hidden} transition-all duration-100`}>
+            <Modal modal={modal} setModal={setModal} >
+              <div className={`${modal ? "visible opacity-100" : "invisible opacity-0"} transition-all duration-100`}>
                 <UserModal />
               </div>
             </Modal>
