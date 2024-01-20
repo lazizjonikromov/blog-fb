@@ -12,9 +12,11 @@ const Context = ({ children }) => {
   const [userLoading, setUserLoading] = useState(true);
   const [allUsers, setAllUsers] = useState([]);
 
+  const [publish, setPublish] = useState(false);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if(user) {
+      if (user) {
         setCurrentUser(user);
       } else {
         setCurrentUser(null);
@@ -23,7 +25,7 @@ const Context = ({ children }) => {
     });
 
     return () => unsubscribe();
-  }, [currentUser])
+  }, [currentUser]);
 
   useEffect(() => {
     const getUser = () => {
@@ -32,23 +34,25 @@ const Context = ({ children }) => {
       onSnapshot(postRef, (snapshot) => {
         setAllUsers(
           snapshot.docs.map((doc) => ({
-            ...doc.data(),  
+            ...doc.data(),
             id: doc.id,
           }))
-        )
+        );
         setUserLoading(false);
-      })
-    }
+      });
+    };
     getUser();
-  }, [])
+  }, []);
 
-  
-  return <BlogContext.Provider value={{currentUser, setCurrentUser, allUsers, userLoading}}>
+  return (
+    <BlogContext.Provider
+      value={{ currentUser, setCurrentUser, allUsers, userLoading, publish, setPublish}}
+    >
       {loading ? <Loading /> : children}
-    </BlogContext.Provider>     
+    </BlogContext.Provider>
+  );
 };
 
 export default Context;
 
 export const Blog = () => useContext(BlogContext);
-
