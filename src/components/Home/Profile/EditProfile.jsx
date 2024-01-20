@@ -1,15 +1,64 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { LiaTimesSolid } from "react-icons/lia";
 import Modal from "../../../utils/Modal";
+import { toast } from "react-toastify";
+import { db, storage } from "../../../firebase/firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { doc, updateDoc } from "firebase/firestore";
 
-const EditProfile = ({editModal, setEditModal}) => {
+const EditProfile = ({editModal, setEditModal, getUserData}) => {
   const imgRef = useRef(null);
   const [imgUrl, setImgUrl] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState({
+    username: "",
+    userImg: "",
+    bio: "",
+  });
 
   const btn = "border border-green-600 py-2 px-5 rounded-full text-green-600";
-
   const openFile = () => {
     imgRef.current.click();
+  }
+
+  // if there is data inside our database
+  useEffect(() => {
+    if(getUserData) {
+      setForm(getUserData);
+    } else {
+      setForm({username: "", bio: "", userImg: ""});
+    }
+  }, [getUserData]);
+  
+
+  // save form
+  const saveForm = async () => {
+    if(form["username"] === "" || form["bio"] === "") {
+      toast.error("All inputs are required !!!");
+      return;
+    }
+
+    setLoading(true);
+
+    const storageRef = ref(storage, `image/${form.userImg.name}`)
+    await uploadBytes(storageRef, form?.userImg);
+
+    const imageUrl = await getDownloadURL(storageRef);
+
+    try {
+      const docRef = doc(db, "users", getUserData?.userId);
+      await updateDoc(docRef, {
+        bio: form.bio,
+        username: form.username,
+        userImg: imgUrl ? imageUrl : form.userImg,
+        userId: getUserData?.userId,
+      });
+      setLoading(false);
+      setEditModal(false);
+      toast.success("Profile has been updated");
+    } catch (error) {
+      toast.error(error.message);
+    }
   }
 
   return (
@@ -35,10 +84,13 @@ const EditProfile = ({editModal, setEditModal}) => {
             <div className="w-[5rem]">
               <img 
                 className="min-h-[5rem] min-w-[5rem] object-cover border border-gray-400 rounded-full"
-                src={imgUrl ? imgUrl : "/profile.jpg"} alt="profile-img" />
+                src={imgUrl ? imgUrl : form.userImg ? form.userImg : "/profile.jpg"} alt="profile-img" />
 
               <input 
-                onChange={(e) => setImgUrl(URL.createObjectURL(e.target.files[0]))} 
+                onChange={(e) => {
+                  setImgUrl(URL.createObjectURL(e.target.files[0]));
+                  setForm({...form, userImg : e.target.files[0]});
+                }} 
                 accept="image/jpg, image/png, image/jpeg" 
                 ref={imgRef} type="file" hidden/>
                 
@@ -60,16 +112,26 @@ const EditProfile = ({editModal, setEditModal}) => {
 
         <section className="pt-[1rem] text-sm">
           <label className="pb-3 block" htmlFor="">Name*</label>
-          <input type="text" placeholder="username..." className="p-1 border-b border-black w-full outline-none" maxLength={50}/>
+          <input 
+            value={form.username}
+            onChange={(e) => setForm({...form, username : e.target.value})} 
+            type="text" placeholder="username..." 
+            className="p-1 border-b border-black w-full outline-none" maxLength={50}/>
+
           <p className="text-sm text-gray-600 pt-2">
-            Appears on your Profile page, as your byline, and in your responses.10/50
+            Appears on your Profile page, as your byline, and in your responses.{form.username.length}/50
           </p>
 
           <section className="pt-[1rem] text-sm">
             <label className="pb-3 block" htmlFor="">Bio*</label>
-            <input type="text" placeholder="bio..." className="p-1 border-b border-black w-full outline-none" maxLength={160}/>
+            <input 
+              value={form.bio}
+              onChange={(e) => setForm({...form, bio : e.target.value})} 
+              type="text" placeholder="bio..." 
+              className="p-1 border-b border-black w-full outline-none" maxLength={160}/>
+              
             <p className="text-sm text-gray-600 pt-2">
-              Appears on your Profile and next to your stories. 42/160
+              Appears on your Profile and next to your stories. {form.bio.length}/160
             </p>
           </section>
         </section>
@@ -77,8 +139,8 @@ const EditProfile = ({editModal, setEditModal}) => {
         {/* foot */}
 
         <div className="flex items-center justify-end gap-4 pt-[2rem]">
-          <button className={btn}>Cancel</button>
-          <button className={`${btn} text-white bg-green-800`}>Save</button>
+          <button onClick={() => setEditModal(false)} className={btn}>Cancel</button>
+          <button onClick={saveForm} className={`${btn} text-white bg-green-800`}>Save</button>
         </div>
 
       </div>
