@@ -1,43 +1,20 @@
-import React from 'react'
+import React from "react";
+import UseFetch from "../../hooks/UseFetch";
+import Loading from "../../Loading/Loading";
+import PostsCard from "./PostsCard";
 
 const Posts = () => {
-  return (
-    <div>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-        <h1>Posts</h1>
-    </div>
-  )
-}
+  const { data, loading } = UseFetch("posts");
 
-export default Posts
+  return (
+    <section className="flex flex-col gap-[2.5rem]">
+      {loading ? (
+        <Loading />
+      ) : (
+        data.map((post, i) => <PostsCard post={post} key={i} />)
+      )}
+    </section>
+  );
+};
+
+export default Posts;
