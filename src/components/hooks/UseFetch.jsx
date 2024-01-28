@@ -10,7 +10,7 @@ const UseFetch = (collectionName) => {
     const getUser = () => {
 
       const postRef = query(collection(db, collectionName));
-
+      
       onSnapshot(postRef, (snapshot) => {
         setData(
           snapshot.docs.map((doc) => ({

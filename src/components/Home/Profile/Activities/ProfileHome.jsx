@@ -6,7 +6,7 @@ import PostsCard from "../../../Common/Post/PostsCard";
 const ProfileHome = ({ getUserData }) => {
   const { data, loading } = UseFetch("posts");
   const userPost =
-    data && data?.filter((post) => post.userId === getUserData?.userId);
+    data && data?.filter((post) => post?.userId === getUserData?.userId);
   // console.log(userPost);
   return (
     <div className="flex flex-col gap-5 mb-[4rem]">
@@ -15,11 +15,11 @@ const ProfileHome = ({ getUserData }) => {
           <span className="capitalize">{getUserData?.username}</span> has no
           posts
         </p>
-      )}
+      )}  
       {loading ? (
         <Loading />
       ) : (
-        data?.map((post, i) => <PostsCard post={post} key={i} />)
+        userPost && userPost?.map((post, i) => <PostsCard post={post} key={i} />)
       )}
     </div>
   );

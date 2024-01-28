@@ -5,7 +5,7 @@ const DropDown = ({ children, size, showDrop, setShowDrop }) => {
 
   useEffect(() => {
     const clickOutside = (e) => {
-      if(!dropRef.current.contains(e.target)) {
+      if(!dropRef?.current?.contains(e.target)) {
         setShowDrop(false);
       }
     };
