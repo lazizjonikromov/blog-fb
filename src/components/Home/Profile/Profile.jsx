@@ -112,16 +112,19 @@ const Profile = () => {
               alt="profile-img"
             />
 
-            <h2 className="py-2 font-bold capitalize">Laziz Ikromov</h2>
+            <h2 className="py-2 font-bold capitalize">
+              {getUserData?.username}
+            </h2>
 
             <p className="text-gray-500 first-letter:uppercase text-sm">
-              I am a Frontend Developer
+              {getUserData?.bio}
             </p>
 
             {currentUser?.uid === getUserData?.userId && (
               <button
                 onClick={() => setEditModal(true)}
-                className="text-green-700 pt-6 text-sm w-fit">
+                className="text-green-700 pt-6 text-sm w-fit"
+              >
                 Edit Profile
               </button>
             )}
