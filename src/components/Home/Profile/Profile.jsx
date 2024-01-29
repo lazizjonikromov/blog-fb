@@ -88,8 +88,8 @@ const Profile = () => {
       {/* user details */}
       <Modal modal={modal} setModal={setModal}>
         <div
-          className={`flex-[1] border-l border-gray-300 p-[2rem] z-9
-            fixed right-0 bottom-0 top-0 w-[18rem] bg-white md:relative 
+          className={`flex-[1] border-l border-gray-300 p-[2rem] z-[10] md:z-[9]
+            fixed right-0 bottom-0 top-0 w-[18rem] bg-white md:relative
             ${
               modal ? "translate-x-0" : "translate-x-[100%] md:translate-x-0"
             } transition-all duration-500`}
