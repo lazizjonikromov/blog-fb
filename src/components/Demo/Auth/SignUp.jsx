@@ -50,6 +50,7 @@ const SignUp = ({setSignReq, setModal}) => {
           email: form.email,
           userImg: "",
           bio: "",
+          created: Date.now(),
         });
         navigate("/");
         toast.success("User has been created");
