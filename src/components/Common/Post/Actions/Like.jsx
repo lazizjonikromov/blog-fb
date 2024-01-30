@@ -1,13 +1,47 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { PiHandsClappingDuotone } from "react-icons/pi";
+import { Blog } from "../../../../Context/Context";
+import { toast } from 'react-toastify';
+import { deleteDoc, doc, setDoc } from 'firebase/firestore';
+import { db } from '../../../../firebase/firebase';
+import UseSingleFetch from '../../../hooks/UseSingleFetch';
+import { formatNum } from '../../../../utils/helper';
 
-const Like = ({ post }) => {
+const Like = ({ postId }) => {
+  const [isLiked, setIsLiked] = useState(false);
+  const { currentUser } = Blog();
+
+  const { data } = UseSingleFetch("posts", postId, "likes");
+
+  useEffect(() => {
+    setIsLiked(
+      data && data.findIndex((item) => item.id === currentUser?.uid) !== -1
+    );
+  }, [data]);
+
+  const handleLike = async () => {
+    try {
+      if (currentUser) {
+        const likeRef = doc(db, "posts", postId, "likes", currentUser?.uid);
+        if (isLiked) {
+          await deleteDoc(likeRef);
+        } else {
+          await setDoc(likeRef, {
+            userId: currentUser?.uid,
+          });
+        }
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
+
   return (
-    <button className="flex items-center gap-1 text-sm">
+    <button onClick={handleLike} className="flex items-center gap-1 text-sm">
       <PiHandsClappingDuotone
-        className="text-xl text-black"
+        className={`text-xl ${isLiked ? "text-black" : "text-gray-500"}`}
       />
-      <span>1</span>
+      <span>{formatNum(data?.length)}</span>
     </button>
   )
 }
