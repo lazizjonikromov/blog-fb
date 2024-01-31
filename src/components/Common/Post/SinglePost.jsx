@@ -77,16 +77,19 @@ const SinglePost = () => {
                   <span>{username}.</span>
                   {currentUser?.uid !== userId && <FollowBtn userId={userId} />}
                 </div>
+
                 <p className="text-sm text-gray-500">
                   {readTime({ __html: desc })} min read.
-                  <span className="ml-1">{moment(created).fromNow()}</span>
+                  <span className="ml-1">
+                    {moment(created?.seconds * 1000).fromNow()}
+                  </span>
                 </p>
               </div>
             </div>
 
             <div className="flex items-center justify-between border-b border-t border-gray-200 py-[0.5rem]">
               <div className="flex items-center gap-5">
-                <Like postId={ postId } />
+                <Like postId={postId} />
                 <Comment />
               </div>
               <div className="flex items-center pt-2 gap-5">
@@ -110,7 +113,7 @@ const SinglePost = () => {
               />
             </div>
           </section>
-          {post && <Recommended post={post}/>}
+          {post && <Recommended post={post} />}
         </>
       )}
     </>
