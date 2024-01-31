@@ -3,7 +3,7 @@ import { LiaTimesSolid } from "react-icons/lia";
 import ReactQuill from "react-quill";
 import TagsInput from "react-tagsinput";
 import { toast } from "react-toastify";
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection } from "firebase/firestore";
 import { db, storage } from "../../../firebase/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { Blog } from "../../../Context/Context";
@@ -14,7 +14,7 @@ const Preview = ({ setPublish, title, description }) => {
   const [imageUrl, setImageUrl] = useState("");
   const [tags, setTags] = useState([]);
   const [desc, setDesc] = useState("");
-  const {currentUser} = Blog();
+  const { currentUser } = Blog();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -45,23 +45,27 @@ const Preview = ({ setPublish, title, description }) => {
         return;
       }
 
-      if(preview.title.length < 15) {
+      if (preview.title.length < 15) {
         toast.error("Title must be at least 15 letters");
       }
 
       const collections = collection(db, "posts");
 
-      const storageRef = ref(storage, `image/${preview.photo.name}`);
-      await uploadBytes(storageRef, preview?.photo);
+      // let url;
+      
+      if (imageUrl) {
+        const storageRef = ref(storage, `image/${preview.photo.name}`);
+        await uploadBytes(storageRef, preview?.photo);
 
-      const imageUrl = await getDownloadURL(storageRef);
+        imageUrl = await getDownloadURL(storageRef);
+      }
 
       await addDoc(collections, {
         userId: currentUser?.uid,
         title: preview.title,
         desc,
         tags,
-        postImg: imageUrl,
+        postImg: imageUrl || "",
         created: Date.now(),
         pageViews: 0,
       });
@@ -72,8 +76,7 @@ const Preview = ({ setPublish, title, description }) => {
       setPreview({
         title: "",
         photo: "",
-      })
-
+      });
     } catch (error) {
       toast.error(error.message);
     } finally {

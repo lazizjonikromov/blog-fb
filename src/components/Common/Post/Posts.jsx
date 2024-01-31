@@ -1,17 +1,17 @@
 import React from "react";
-import UseFetch from "../../hooks/UseFetch";
 import Loading from "../../Loading/Loading";
 import PostsCard from "./PostsCard";
+import { Blog } from "../../../Context/Context";
 
 const Posts = () => {
-  const { data, loading } = UseFetch("posts");
+  const { postData, postLoading } = Blog();
 
   return (
     <section className="flex flex-col gap-[2.5rem]">
-      {loading ? (
+      {postLoading ? (
         <Loading />
       ) : (
-        data.map((post, i) => <PostsCard post={post} key={i} />)
+        postData && postData?.map((post, i) => <PostsCard post={post} key={i} />)
       )}
     </section>
   );

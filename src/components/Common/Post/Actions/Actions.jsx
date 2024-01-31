@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import DropDown from "../../../../utils/DropDown";
 
-const Actions = () => {
+const Actions = ({postId, title, desc}) => {
   const [showDrop, setShowDrop] = useState(false);
 
   const handleClick = () => {

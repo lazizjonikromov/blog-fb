@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { auth, db } from "../firebase/firebase";
 import Loading from "../components/Loading/Loading";
 import { collection, onSnapshot, query } from "firebase/firestore";
+import UseFetch from "../components/hooks/UseFetch";
 
 const BlogContext = createContext();
 
@@ -29,6 +30,7 @@ const Context = ({ children }) => {
     return () => unsubscribe();
   }, [currentUser]);
 
+  // get users
   useEffect(() => {
     const getUser = () => {
       const postRef = query(collection(db, "users"));
@@ -46,6 +48,8 @@ const Context = ({ children }) => {
     getUser();
   }, []);
 
+  const { data: postData, loading: postLoading } = UseFetch("posts");
+
   return (
     <BlogContext.Provider
       value={{
@@ -59,6 +63,8 @@ const Context = ({ children }) => {
         setShowComment,
         commentLength,
         setCommentLength,
+        postData,
+        postLoading,
       }}
     >
       {loading ? <Loading /> : children}

@@ -45,10 +45,10 @@ const SavedPost = ({ post }) => {
 
   return (
     <>
-      <button onClick={hadleSave} className="hover:opacity-60">
+      <button onClick={hadleSave} className="hover:opacity-60 mb-2">
         <CiSaveDown2
           className={`text-2xl pointer-event-none ${
-            isSaved ? "text-yellow-600" : ""
+            isSaved ? "!text-yellow-600" : ""
           } `}
         />
       </button>

@@ -36,8 +36,8 @@ const SinglePost = () => {
             const getUser = await getDoc(userRef);
 
             if (getUser.exists()) {
-              const userData = getUser.data();
-              setPost({ ...postData, ...userData, id: postId });
+              const {created, ...rest} = getUser.data();
+              setPost({ ...postData, ...rest, id: postId });
             }
           }
         }
@@ -82,7 +82,7 @@ const SinglePost = () => {
                 <p className="text-sm text-gray-500">
                   {readTime({ __html: desc })} min read.
                   <span className="ml-1">
-                    {moment(created?.seconds * 1000).fromNow()}
+                    {moment(created).fromNow()}
                   </span>
                 </p>
               </div>
