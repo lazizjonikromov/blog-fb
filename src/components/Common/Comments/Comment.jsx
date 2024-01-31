@@ -3,6 +3,9 @@ import { Blog } from "../../../Context/Context";
 import moment from "moment";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import DropDown from "../../../utils/DropDown";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "../../../firebase/firebase";
+import { toast } from "react-toastify";
 
 const Comment = ({ item: comment, postId }) => {
   const { allUsers, currentUser } = Blog();
@@ -11,6 +14,17 @@ const Comment = ({ item: comment, postId }) => {
   const getUserData = allUsers.find((user) => user.id === comment?.userId);
 
   const { userId, commentText, created } = comment;
+
+  const removeComment = async () => {
+    try {
+      const ref = doc(db, "posts", postId, "comments", comment?.id);
+      await deleteDoc(ref);
+      setDrop(false);
+      toast.success("Comment has been removed");
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <section className="border-b">
@@ -40,7 +54,7 @@ const Comment = ({ item: comment, postId }) => {
                   size="w-[10rem]"
                 >
                   <Button click="" title="Edit this response" />
-                  <Button click="" title="Delete" />
+                  <Button click={removeComment} title="Delete" />
                 </DropDown>
               </>
             )}
