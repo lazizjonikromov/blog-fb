@@ -14,6 +14,7 @@ import Like from "./Actions/Like";
 import Comment from "./Actions/Comment";
 import SharePost from "./Actions/SharePost";
 import Recommended from "./Recommended";
+import Comments from "../Comments/Comments";
 
 const SinglePost = () => {
   const { postId } = useParams();
@@ -114,6 +115,7 @@ const SinglePost = () => {
             </div>
           </section>
           {post && <Recommended post={post} />}
+          <Comments postId={postId}/>
         </>
       )}
     </>
