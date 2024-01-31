@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "./../../../utils/Modal";
 import { LiaTimesSolid } from "react-icons/lia";
 import { Blog } from "../../../Context/Context";
@@ -10,8 +10,13 @@ import Loading from "../../Loading/Loading";
 import Comment from "./Comment";
 
 const Comments = ({ postId }) => {
-  const [showModal, setShowModal] = useState(true);
-  const { currentUser, allUsers } = Blog();
+  const {
+    currentUser,
+    allUsers,
+    showComment,
+    setShowComment,
+    setCommentLength,
+  } = Blog();
   const [comment, setComment] = useState("");
 
   const getUserData = allUsers.find((user) => user.id === currentUser?.uid);
@@ -38,18 +43,24 @@ const Comments = ({ postId }) => {
     }
   };
 
+  useEffect(() => {
+    if (data) {
+      setCommentLength(data.length);
+    }
+  }, [data]);
+
   return (
-    <Modal setModal={setShowModal} modal={showModal}>
+    <Modal setModal={setShowComment} modal={showComment}>
       <section
         className={`fixed top-0 right-0 bottom-0 z-50 bg-white w-[22rem] shadows p-5
           overflow-y-auto transition-all duration-500
-          ${showModal ? "translate-x-0" : "translate-x-[23rem]"}
+          ${showComment ? "translate-x-0" : "translate-x-[23rem]"}
         `}
       >
         {/* header */}
         <div className="flex items-center justify-between">
-          <h3 className="text-xl font-bold">Responses(1)</h3>
-          <button onClick={() => setShowModal(false)} className="text-xl">
+          <h3 className="text-xl font-bold">Responses({data.length})</h3>
+          <button onClick={() => setShowComment(false)} className="text-xl">
             <LiaTimesSolid />
           </button>
         </div>
