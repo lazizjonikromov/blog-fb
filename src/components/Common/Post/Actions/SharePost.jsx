@@ -5,6 +5,7 @@ import { CiShare1 } from "react-icons/ci";
 import {
   FacebookShareButton,
   LinkedinShareButton,
+  TelegramShareButton,
   TwitterShareButton,
 } from "react-share";
 
@@ -12,11 +13,26 @@ import {
   BiLink,
   BiLogoFacebookCircle,
   BiLogoLinkedinSquare,
+  BiLogoTelegram,
   BiLogoTwitter,
 } from "react-icons/bi";
+import { toast } from "react-toastify";
 
 const SharePost = () => {
   const [showDrop, setShowDrop] = useState(false);
+
+  const path = window.location.href;
+
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(path);
+      toast.success("Link has been copied");
+      setShowDrop(false);
+    } catch (error) {
+      toast.error(error.message);
+      setShowDrop(false);
+    }
+  };
 
   return (
     <div className="relative">
@@ -25,16 +41,25 @@ const SharePost = () => {
       </button>
 
       <DropDown showDrop={showDrop} setShowDrop={setShowDrop} size="w-[12rem]">
-        <Button click="" title="Copy Link" icon={<BiLink />} />
-        {/* <TwitterShareButton url={path}> */}
-          <Button click="" title="Share On Twitter" icon={<BiLogoTwitter />} />
-        {/* </TwitterShareButton> */}
-        {/* <FacebookShareButton url={path}> */}
-          <Button click="" title="Share On Facebook" icon={<BiLogoFacebookCircle />} />
-        {/* </FacebookShareButton> */}
-        {/* <LinkedinShareButton url={path}> */}
-          <Button click="" title="Share On LinkedIn" icon={<BiLogoLinkedinSquare />} />
-        {/* </LinkedinShareButton> */}
+
+        <Button click={copyLink} title="Copy Link" icon={<BiLink />} />
+
+        <TwitterShareButton url={path}>
+          <Button title="Share On Twitter" icon={<BiLogoTwitter />} />
+        </TwitterShareButton>
+
+        <FacebookShareButton url={path}>
+          <Button title="Share On Facebook" icon={<BiLogoFacebookCircle />} />
+        </FacebookShareButton>
+
+        <LinkedinShareButton url={path}>
+          <Button title="Share On LinkedIn" icon={<BiLogoLinkedinSquare />} />
+        </LinkedinShareButton>      
+
+        <TelegramShareButton url={path}>
+          <Button title="Share On Telegram" icon={<BiLogoTelegram />} />
+        </TelegramShareButton>   
+
       </DropDown>
     </div>
   );
