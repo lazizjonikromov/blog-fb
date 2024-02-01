@@ -45,19 +45,18 @@ const Preview = ({ setPublish, title, description }) => {
         return;
       }
 
-      if (preview.title.length < 15) {
-        toast.error("Title must be at least 15 letters");
+      if (preview.title.length < 10) {
+        toast.error("Title must be at least 10 letters");
       }
 
       const collections = collection(db, "posts");
 
-      // let url;
-      
+      let url;
       if (imageUrl) {
         const storageRef = ref(storage, `image/${preview.photo.name}`);
         await uploadBytes(storageRef, preview?.photo);
 
-        imageUrl = await getDownloadURL(storageRef);
+        url = await getDownloadURL(storageRef);
       }
 
       await addDoc(collections, {
@@ -65,7 +64,7 @@ const Preview = ({ setPublish, title, description }) => {
         title: preview.title,
         desc,
         tags,
-        postImg: imageUrl || "",
+        postImg: url || "",
         created: Date.now(),
         pageViews: 0,
       });
