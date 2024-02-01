@@ -15,6 +15,10 @@ const Context = ({ children }) => {
   const [showComment, setShowComment] = useState(false);
   const [commentLength, setCommentLength] = useState(0);
 
+  const [updateData, setUpdateData] = useState({});
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
   const [publish, setPublish] = useState(false);
 
   useEffect(() => {
@@ -65,6 +69,12 @@ const Context = ({ children }) => {
         setCommentLength,
         postData,
         postLoading,
+        updateData,
+        setUpdateData,
+        title,
+        setTitle,
+        description,
+        setDescription, 
       }}
     >
       {loading ? <Loading /> : children}

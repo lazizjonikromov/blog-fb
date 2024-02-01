@@ -50,7 +50,7 @@ const PostsCard = ({ post }) => {
           {moment(created).format("MMM DD")}
         </p>
         <div className="flex items-center gap-3">
-          <SavedPost post={post} />
+          {post && <SavedPost post={post} />}
           {post && currentUser?.uid === userId && (
             <Actions postId={postId} title={title} desc={desc} /> 
           )}

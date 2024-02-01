@@ -30,7 +30,7 @@ const SinglePost = () => {
         const getPost = await getDoc(postRef);
 
         if (getPost.exists()) {
-          const postData = getPost.data();
+          const postData = getPost.data();                   
           if (postData?.userId) {
             const userRef = doc(db, "users", postData?.userId);
             const getUser = await getDoc(userRef);
@@ -94,9 +94,9 @@ const SinglePost = () => {
                 <Comment />
               </div>
               <div className="flex items-center pt-2 gap-5">
-                {post && <SavedPost post={post} />}
+                {post && <SavedPost post={post} />}                 
                 <SharePost />
-                {currentUser?.uid === post?.userId && <Actions />}
+                {currentUser?.uid === post?.userId && <Actions postId={postId} title={title} desc={desc} />} 
               </div>
             </div>
 
