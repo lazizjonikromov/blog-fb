@@ -28,7 +28,7 @@ const Comment = ({ item: comment, postId }) => {
     } catch (error) {
       toast.error(error.message);
     }
-  };
+  };  
 
   const editCommentText = () => {
     setIsEdit(true);
