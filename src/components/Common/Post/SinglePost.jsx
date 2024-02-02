@@ -1,5 +1,5 @@
-import { doc, getDoc } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import { doc, getDoc, increment, updateDoc } from "firebase/firestore";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { db } from "../../../firebase/firebase";
 import { toast } from "react-toastify";
@@ -22,6 +22,33 @@ const SinglePost = () => {
   const [loading, setLoading] = useState(false);
   const { currentUser } = Blog();
 
+  // increment page views
+
+  const isInitialRender = useRef(true);
+  useEffect(() => {
+    if (isInitialRender?.current) {
+      const incrementPageView = async () => {
+        try {
+          const ref = doc(db, "posts", postId);
+          await updateDoc(
+            ref,
+            {
+              pageViews: increment(1),
+            },
+            { merge: true }
+          );
+        } catch (error) {
+          toast.error(error.message);
+        }
+      };
+      incrementPageView();
+    }
+
+    isInitialRender.current = false;
+  }, []);
+
+  // fetch single post
+
   useEffect(() => {
     const fetchPost = async () => {
       setLoading(true);
@@ -30,13 +57,13 @@ const SinglePost = () => {
         const getPost = await getDoc(postRef);
 
         if (getPost.exists()) {
-          const postData = getPost.data();                   
+          const postData = getPost.data();
           if (postData?.userId) {
             const userRef = doc(db, "users", postData?.userId);
             const getUser = await getDoc(userRef);
 
             if (getUser.exists()) {
-              const {created, ...rest} = getUser.data();
+              const { created, ...rest } = getUser.data();
               setPost({ ...postData, ...rest, id: postId });
             }
           }
@@ -76,14 +103,14 @@ const SinglePost = () => {
               <div>
                 <div className="capitalize">
                   <span>{username}.</span>
-                  {currentUser?.uid !== userId && <FollowBtn userId={userId} />}
+                  {currentUser && currentUser?.uid !== userId && (
+                    <FollowBtn userId={userId} />
+                  )}
                 </div>
 
                 <p className="text-sm text-gray-500">
                   {readTime({ __html: desc })} min read.
-                  <span className="ml-1">
-                    {moment(created).fromNow()}
-                  </span>
+                  <span className="ml-1">{moment(created).fromNow()}</span>
                 </p>
               </div>
             </div>
@@ -94,9 +121,11 @@ const SinglePost = () => {
                 <Comment />
               </div>
               <div className="flex items-center pt-2 gap-5">
-                {post && <SavedPost post={post} />}                 
+                {post && <SavedPost post={post} />}
                 <SharePost />
-                {currentUser?.uid === post?.userId && <Actions postId={postId} title={title} desc={desc} />} 
+                {currentUser && currentUser?.uid === post?.userId && (
+                  <Actions postId={postId} title={title} desc={desc} />
+                )}
               </div>
             </div>
 
@@ -115,7 +144,7 @@ const SinglePost = () => {
             </div>
           </section>
           {post && <Recommended post={post} />}
-          <Comments postId={postId}/>
+          <Comments postId={postId} />
         </>
       )}
     </>
