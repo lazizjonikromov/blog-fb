@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { nav } from "../../data";
 import Auth from "./Auth/Auth";
+import { Blog } from "../../Context/Context";
 
 const DemoHeader = () => {
   const [isActive, setIsActive] = useState(false);
-  const [modal, setModal] = useState(false)
+  const { authModel, setAuthModel } = Blog();
 
   useEffect(() => {
     const scrolMe = () => {
@@ -34,14 +35,14 @@ const DemoHeader = () => {
           </div>
           <div className="relative">
             <button
-            onClick={() => setModal(true)}
+            onClick={() => setAuthModel(true)}
             className="hidden text-sm sm:flex items-center gap-5">
               Sign In
             </button>
-            <Auth modal={modal} setModal={setModal}/>
+            <Auth modal={authModel} setModal={setAuthModel}/>
           </div>
           <button 
-          onClick={() => setModal(true)}
+          onClick={() => setAuthModel(true)}
           className={`text-white rounded-full px-3 p-2 text-sm font-medium ${isActive ? "bg-green-700" : "bg-black"} transition-all duration-500`}>
             Get Started
           </button>

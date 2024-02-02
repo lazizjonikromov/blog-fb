@@ -8,18 +8,20 @@ const UseSingleFetch = (collectionName, id, subCol) => {
 
   useEffect(() => {
     const getSingleData = () => {
-      const postRef = query(collection(db, collectionName, id, subCol));
+      if (id) {
+        const postRef = query(collection(db, collectionName, id, subCol));
 
-      onSnapshot(postRef, (snapshot) => {
-        setData(
-          snapshot.docs.map((doc) => ({
-            ...doc.data(),
-            id: doc.id,
-          }))
-        );
+        onSnapshot(postRef, (snapshot) => {
+          setData(
+            snapshot.docs.map((doc) => ({
+              ...doc.data(),
+              id: doc.id,
+            }))
+          );
 
-        setLoading(false);
-      });
+          setLoading(false);
+        });
+      }
     };
     getSingleData();
   }, [db, id]);

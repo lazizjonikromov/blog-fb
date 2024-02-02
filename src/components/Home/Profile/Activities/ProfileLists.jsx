@@ -14,7 +14,7 @@ const ProfileLists = ({ getUserData }) => {
   );
   return (
     <div>
-      {currentUser?.uid === getUserData?.userId ? (
+      {currentUser && currentUser?.uid === getUserData?.userId ? (
         <div className="flex flex-col gap-[2rem] mb-[2rem]">
           {data.length === 0 && (
             <p className="text-gray-500">

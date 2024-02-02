@@ -9,7 +9,7 @@ import { formatNum } from '../../../../utils/helper';
 
 const Like = ({ postId }) => {
   const [isLiked, setIsLiked] = useState(false);
-  const { currentUser } = Blog();
+  const { currentUser, setAuthModel } = Blog();
 
   const { data } = UseSingleFetch("posts", postId, "likes");
 
@@ -21,6 +21,7 @@ const Like = ({ postId }) => {
 
   const handleLike = async () => {
     try {
+
       if (currentUser) {
         const likeRef = doc(db, "posts", postId, "likes", currentUser?.uid);
         if (isLiked) {
@@ -30,7 +31,10 @@ const Like = ({ postId }) => {
             userId: currentUser?.uid,
           });
         }
+      } else {
+        setAuthModel(true);
       }
+
     } catch (error) {
       toast.error(error.message);
     }

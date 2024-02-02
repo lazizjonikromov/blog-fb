@@ -8,11 +8,11 @@ import UseSingleFetch from "../../../hooks/UseSingleFetch";
 
 const SavedPost = ({ post }) => {
   const [isSaved, setIsSaved] = useState(false);
-  const { currentUser } = Blog();
+  const { currentUser, setAuthModel } = Blog();
   const { data } = UseSingleFetch("users", post?.userId, "savePost");
 
   useEffect(() => {
-    setIsSaved(data && data?.find((item) => item.id === post.id)) !== -1;
+    setIsSaved(data && data?.find((item) => item.id === currentUser?.uid)) !== -1;
   }, [data, post?.id]);
 
   const hadleSave = async () => {
@@ -35,6 +35,8 @@ const SavedPost = ({ post }) => {
           });
           toast.success("Post has been Saved");
         }
+      } else {
+        setAuthModel(true);
       }
     } catch (error) {
       toast.error(error.message);

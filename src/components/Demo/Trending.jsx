@@ -37,7 +37,7 @@ const Trend = ({ trend, index }) => {
   const navigate = useNavigate();
   return (
     <main className="flex gap-4 w-full">
-      <span className="text-gray-400 text-4xl mt-4">{index + 1}</span>
+      <span className="text-gray-400 text-4xl mt-4">0{index + 1}</span>
       <div className="py-6 flex flex-col gap-3">
         <div className="flex items-center gap-2">
           <div

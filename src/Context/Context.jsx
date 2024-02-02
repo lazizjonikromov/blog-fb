@@ -14,6 +14,7 @@ const Context = ({ children }) => {
   const [allUsers, setAllUsers] = useState([]);
   const [showComment, setShowComment] = useState(false);
   const [commentLength, setCommentLength] = useState(0);
+  const [authModel, setAuthModel] = useState(false);
 
   const [updateData, setUpdateData] = useState({});
   const [title, setTitle] = useState("");
@@ -75,6 +76,8 @@ const Context = ({ children }) => {
         setTitle,
         description,
         setDescription, 
+        authModel,
+        setAuthModel,
       }}
     >
       {loading ? <Loading /> : children}
