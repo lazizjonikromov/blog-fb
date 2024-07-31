@@ -10,6 +10,9 @@ lerna-debug.log*
 firebase
 /firebase
 
+constants
+/constants
+
 node_modules
 dist
 dist-ssr
